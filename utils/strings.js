@@ -2,7 +2,8 @@ const strings_es = {
   errors: {
     viewer: {
       nonValidComponentFound: "No se encontró un componente válido (buscando App o Component)",
-      completeRenderingError: "Error de renderizado completo:"
+      completeRenderingError: "Error de renderizado completo:",
+      componentViewerError: "¡Oh no!, ha ocurrido un error."
     },
   },
   ui_strings: {

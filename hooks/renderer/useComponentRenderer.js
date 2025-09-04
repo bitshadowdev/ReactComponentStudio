@@ -2,16 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { transform } from "@babel/standalone";
 import { params } from '@/utils/params';
 import { getStrings } from '@/utils/strings';
+import { useErrorStore } from '@/stores/errorStore';
 
 
 
-export const useComponentRenderer = (code) => {
+export const useComponentRenderer = (code, triggerRender) => {
   const [renderedComponent, setRenderedComponent] = useState(null);
-  const [error, setError] = useState(null);
+  const error = useErrorStore((state) => {state.errors});
   const strings = getStrings();
+
   const noCodeState = () => {
     setRenderedComponent(null);
-    setError(null);
     return;
   }
 
@@ -35,8 +36,10 @@ export const useComponentRenderer = (code) => {
   }
 
   const renderComponent = (Component) => {
-    setRenderedComponent(React.createElement(Component));
-    setError(null);
+    if (!error) {
+      setRenderedComponent(React.createElement(Component));
+
+    }
   }
 
   useEffect(() => {
@@ -50,13 +53,11 @@ export const useComponentRenderer = (code) => {
     } else {
       throw new Error(strings.errors.viewer.nonValidComponentFound);
     }
-    console.error(strings.errors.viewer.completeRenderingError, err);
-    setError(err.message);
-    setRenderedComponent(null);
+
     
-  }, [code]);
+  }, [triggerRender]);
 
   return {
-    renderedComponent, error
+    renderedComponent
   }
 }

@@ -1,25 +1,20 @@
-import { useCallback, useState } from "react";
-import { params } from '@/utils/params';
+import { useCallback } from 'react';
+import { useEditorStore } from '@/stores/editorStore';
 
 export default function useEditor() {
-  const [code, setCode] = useState(params.editor.editorDefaultCode);
-  const [lineCount, setLineCount] = useState(0);
-  const [triggerRender, setTriggerRender] = useState(false);
+  const code = useEditorStore(state => state.code);
+  const setCode = useEditorStore(state => state.setCode);
+  const triggerRender = useEditorStore(state => state.triggerRender);
+  const setTriggerRender = useEditorStore(state => state.setTriggerRender);
 
-  const onEditorChange = useCallback((code, viewUpdate) => {
-    const currentLineCount = code.split("\n").length
-    console.log(currentLineCount)
-    if (currentLineCount !== lineCount) {
-      setLineCount(currentLineCount)
-      setTriggerRender((render) => !render)    
-    }
-
-    setCode(code);
-  });
-
-
+  const onEditorChange = useCallback((newCode) => {
+    setCode(newCode);
+  }, [setCode]);
 
   return {
-    code, setCode, onEditorChange, triggerRender, setTriggerRender
-  }
+    code,
+    onEditorChange,
+    triggerRender,
+    setTriggerRender
+  };
 }

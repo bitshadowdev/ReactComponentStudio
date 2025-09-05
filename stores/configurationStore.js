@@ -2,25 +2,48 @@ import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 
 const defaultConfiguration = {
-  themeMode: 'dark', 
-  theme: 'dracula', 
-  
-  fontFamily: 'Fira Code',
-  fontSize: 14, 
-  lineHeight: 1.5, 
-  letterSpacing: 0, 
-  
-  lineWrapping: false, 
-  
-  showSpaces: false, 
-  showTabs: false, 
-  showNewlines: false, 
-  lineNumbers: true, 
-  codeFolding: true, 
-  autoCloseBrackets: true, 
-  indentWithTabs: false, 
-  tabSize: 2, 
-  indentUnit: 2 
+  configuration: {
+    editor: {
+      themeMode: 'dark', 
+      theme: 'dracula', 
+      fontFamily: '"Fira Code", monospace',
+      fontSize: 14, 
+      lineHeight: 1.5, 
+      letterSpacing: 0, 
+      lineWrapping: 'none', 
+      showSpaces: false, 
+      showTabs: false, 
+      showNewlines: false, 
+      lineNumbers: true, 
+      codeFolding: true, 
+      autocloseBrackets: true, 
+      indentWithTabs: false, 
+      tabSize: 2, 
+      indentUnit: 2
+    },
+    visualEffects: {
+      enabled: true,
+      particleEffects: {
+        enabled: true,
+        count: 12,
+        size: 4,
+        theme: 'light', // 'light', 'dark', 'accent'
+        spreadRadius: 40,
+        duration: 600
+      },
+      drawerAnimations: {
+        enabled: true,
+        duration: 350,
+        easing: 'power3.out'
+      },
+      selectionEffects: {
+        enabled: true,
+        duration: 400,
+        glowIntensity: 0.8
+      },
+      reducedMotion: false // Modo accesibilidad
+    }
+  }
 }
 
 export const useConfigurationStore = create(
@@ -28,51 +51,76 @@ export const useConfigurationStore = create(
     (set, get) => ({
       ...defaultConfiguration,
       
-      setThemeMode: (themeMode) => set({ themeMode }),
-      setTheme: (theme) => set({ theme }),
-      setFontFamily: (fontFamily) => set({ fontFamily }),
-      setFontSize: (fontSize) => set({ fontSize }),
-      setLineHeight: (lineHeight) => set({ lineHeight }),
-      setLetterSpacing: (letterSpacing) => set({ letterSpacing }),
-      setLineWrapping: (lineWrapping) => set({ lineWrapping }),
-      setShowSpaces: (showSpaces) => set({ showSpaces }),
-      setShowTabs: (showTabs) => set({ showTabs }),
-      setShowNewlines: (showNewlines) => set({ showNewlines }),
-      setLineNumbers: (lineNumbers) => set({ lineNumbers }),
-      setCodeFolding: (codeFolding) => set({ codeFolding }),
-      setAutoCloseBrackets: (autoCloseBrackets) => set({ autoCloseBrackets }),
-      setIndentWithTabs: (indentWithTabs) => set({ indentWithTabs }),
-      setTabSize: (tabSize) => set({ tabSize }),
-      setIndentUnit: (indentUnit) => set({ indentUnit }),
+      setEditorConfiguration: (newConfig) => 
+        set(state => ({
+          configuration: {
+            ...state.configuration,
+            editor: {
+              ...state.configuration.editor,
+              ...newConfig
+            }
+          }
+        })),
+
+      setVisualEffectsConfiguration: (newConfig) =>
+        set(state => ({
+          configuration: {
+            ...state.configuration,
+            visualEffects: {
+              ...state.configuration.visualEffects,
+              ...newConfig
+            }
+          }
+        })),
+
+      setParticleEffects: (newConfig) =>
+        set(state => ({
+          configuration: {
+            ...state.configuration,
+            visualEffects: {
+              ...state.configuration.visualEffects,
+              particleEffects: {
+                ...state.configuration.visualEffects.particleEffects,
+                ...newConfig
+              }
+            }
+          }
+        })),
+
+      setDrawerAnimations: (newConfig) =>
+        set(state => ({
+          configuration: {
+            ...state.configuration,
+            visualEffects: {
+              ...state.configuration.visualEffects,
+              drawerAnimations: {
+                ...state.configuration.visualEffects.drawerAnimations,
+                ...newConfig
+              }
+            }
+          }
+        })),
+
+      setSelectionEffects: (newConfig) =>
+        set(state => ({
+          configuration: {
+            ...state.configuration,
+            visualEffects: {
+              ...state.configuration.visualEffects,
+              selectionEffects: {
+                ...state.configuration.visualEffects.selectionEffects,
+                ...newConfig
+              }
+            }
+          }
+        })),
       
-      resetToDefault: () => set(defaultConfiguration),
-      
-      updateConfiguration: (newConfig) => set({ ...newConfig })
+      resetToDefault: () => set(defaultConfiguration)
     }),
     {
-      name: 'editor-configuration', 
+      name: 'editor-configuration',
       partialize: (state) => {
-        const {
-          setThemeMode,
-          setTheme,
-          setFontFamily,
-          setFontSize,
-          setLineHeight,
-          setLetterSpacing,
-          setLineWrapping,
-          setShowSpaces,
-          setShowTabs,
-          setShowNewlines,
-          setLineNumbers,
-          setCodeFolding,
-          setAutoCloseBrackets,
-          setIndentWithTabs,
-          setTabSize,
-          setIndentUnit,
-          resetToDefault,
-          updateConfiguration,
-          ...persistedState
-        } = state
+        const { setEditorConfiguration, resetToDefault, ...persistedState } = state
         return persistedState
       }
     }

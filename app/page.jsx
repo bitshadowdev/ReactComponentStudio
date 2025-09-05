@@ -1,25 +1,77 @@
-"use client"
+'use client';
 
-import ComponentEditor from "@/components/editor/Editor";
-import ComponentPreview from "@/components/renderer/ComponentPreview";
-import useEditor from "@/hooks/editor/useEditor";
-import { useHotkeys } from "react-hotkeys-hook";
+import { useRef, useState, useEffect } from 'react';
+import { gsap } from 'gsap';
+import ComponentEditor from '@/components/editor/Editor';
+import ComponentPreview from '@/components/renderer/ComponentPreview';
+import useEditor from '@/hooks/editor/useEditor';
+import { useHotkeys } from 'react-hotkeys-hook';
+import SettingsPanel from '@/components/settingsPanel/Settings';
+import NotificationContainer from '@/components/generalComponents/NotificationContainer';
+import { commandManager } from '@/utils/commands';
+import { useNotificationStore } from '@/stores/notificationStore';
 
 export default function Home() {
-  const {code, onEditorChange, triggerRender, setTriggerRender} = useEditor();
-  useHotkeys("alt+enter", () => {setTriggerRender((render) => !render); console.log("render");});
+  const { code, onEditorChange, triggerRender, setTriggerRender } = useEditor();
+  const componentPreviewRef = useRef(null);
+  const editorRef = useRef(null);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const { addCommandNotification } = useNotificationStore();
+
+  useHotkeys('alt+enter', () => {
+    setTriggerRender((render) => !render);
+  });
+
+  // Initialize notification system with CommandManager
+  useEffect(() => {
+    commandManager.setNotificationCallback((commandType, command) => {
+      addCommandNotification(commandType, command);
+    });
+  }, [addCommandNotification]);
+
+  useEffect(() => {
+    if (isSettingsOpen) {
+      gsap.to([editorRef.current, componentPreviewRef.current], {
+        x: 384, // Match the w-96 width (96 * 4px = 384px)
+        duration: 0.5,
+        ease: 'power2.out'
+      });
+    } else {
+      gsap.to([editorRef.current, componentPreviewRef.current], {
+        x: 0,
+        duration: 0.3,
+        ease: 'power2.in'
+      });
+    }
+  }, [isSettingsOpen]);
 
   return (
-    <section id="editorLayout" className="flex w-full">
-      <div id="editor" className="w-1/2 border-r flex flex-col">
-        <div className="flex-1 overflow-hidden">
-          <ComponentEditor setTriggerRender={setTriggerRender} code={code} onEditorChange={onEditorChange} setTriggerRender={setTriggerRender} />
+    <main className="flex h-screen overflow-hidden">
+      <div className="fixed left-0 w-96 h-full z-10">
+        {isSettingsOpen && <SettingsPanel isOpen={isSettingsOpen} onClose={() => setIsSettingsOpen(false)} />}
+      </div>
+      
+      <section 
+        id="editorLayout" 
+        className="flex flex-1 w-full"
+        style={{ width: isSettingsOpen ? 'calc(100% + 384px)' : '100%' }}
+      >
+        <div ref={editorRef} className="w-1/2 border-r flex flex-col relative h-full">
+          <ComponentEditor
+            code={code}
+            onEditorChange={onEditorChange}
+            setTriggerRender={setTriggerRender}
+            isSettingsOpen={isSettingsOpen}
+            setIsSettingsOpen={setIsSettingsOpen}
+          />
         </div>
-      </div>
-      <div className="w-1/2 flex flex-col">
-
-        <ComponentPreview code={code} triggerRender={triggerRender}/>
-      </div>
-    </section>
+        
+        <div ref={componentPreviewRef} className="w-1/2 flex flex-col overflow-y-hidden h-full">
+          <ComponentPreview code={code} triggerRender={triggerRender} />
+        </div>
+      </section>
+      
+      <NotificationContainer />
+    </main>
   );
 }

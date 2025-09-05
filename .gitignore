@@ -39,3 +39,10 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+.windsurf/rules/desicion-making.md
+.gitignore
+administrativo/desiciones.md
+administrativo/requerimientos_arquitecturales.md
+administrativo/historias.md
+.windsurf/rules/strings-declaration.md
+.windsurf/rules/package-manager.md

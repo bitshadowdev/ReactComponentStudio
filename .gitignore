@@ -46,3 +46,6 @@ administrativo/requerimientos_arquitecturales.md
 administrativo/historias.md
 .windsurf/rules/strings-declaration.md
 .windsurf/rules/package-manager.md
+.windsurf/rules/design-principles.md
+.gitignore
+administrativo/decisiones.md

@@ -1,66 +1,33 @@
-'use client';
-
-import { useState, useEffect } from 'react';
-import { useConfigurationStore } from '@/stores/configurationStore';
-import { useEditorStore } from '@/stores/editorStore';
-import { commandManager, ReindentCommand } from '@/utils/commands';
-import RangeSlider from '@/components/generalComponents/RangeSlider';
 import { InteractiveElement } from '@/components/animationWrappers';
+import RangeSlider from '@/components/generalComponents/RangeSlider';
 import { getStrings } from '@/utils/strings';
+import useIndentationSettings from '@/hooks/editor/useIndentationSettings';
 
 const EditorIndentationSettings = () => {
-  const [pendingChanges, setPendingChanges] = useState(false);
-  const editorConfig = useConfigurationStore((state) => state.configuration.editor);
-  const [lastAppliedTabSize, setLastAppliedTabSize] = useState(editorConfig.tabSize);
-  const [lastAppliedIndentUnit, setLastAppliedIndentUnit] = useState(editorConfig.indentUnit);
-
-  const setEditorConfiguration = useConfigurationStore((state) => state.setEditorConfiguration);
-
   const strings = getStrings('es').ui_strings.settings.editorBehavior;
-
-
-  // Check if there are pending changes to apply
-  useEffect(() => {
-    if (!editorConfig) return;
-
-    const hasChanges =
-      editorConfig.tabSize !== lastAppliedTabSize ||
-      editorConfig.indentUnit !== lastAppliedIndentUnit;
-    setPendingChanges(hasChanges);
-  }, [editorConfig, lastAppliedTabSize, lastAppliedIndentUnit]);
-
-  const handleApplyIndentation = () => {
-    if (!pendingChanges) return;
-
-    // Create and execute the reindent command
-    const command = new ReindentCommand(
-      editorConfig.tabSize,
-      editorConfig.useTabs
-    );
-
-    const changesMade = commandManager.executeCommand(command);
-
-    if (changesMade) {
-      setLastAppliedTabSize(editorConfig.tabSize);
-      setLastAppliedIndentUnit(editorConfig.indentUnit);
-      setPendingChanges(false);
-    }
-  };
+  const {
+    pendingChanges,
+    tabSize,
+    indentUnit,
+    setTabSize,
+    setIndentUnit,
+    handleApplyIndentation
+  } = useIndentationSettings();
 
   return (
     <div className="flex flex-col h-full">
       <div className="space-y-6 flex-1">
         <RangeSlider
-          value={editorConfig.tabSize}
-          onChange={(value) => setEditorConfiguration({ tabSize: value })}
+          value={tabSize}
+          onChange={setTabSize}
           min={1}
           max={8}
           label={strings.tabSize}
         />
 
         <RangeSlider
-          value={editorConfig.indentUnit}
-          onChange={(value) => setEditorConfiguration({ indentUnit: value })}
+          value={indentUnit}
+          onChange={setIndentUnit}
           min={1}
           max={8}
           label={strings.indentUnit}

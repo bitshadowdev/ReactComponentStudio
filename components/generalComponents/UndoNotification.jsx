@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { gsap } from 'gsap';
+import { useCallback } from 'react';
+import { useUndoNotification } from '@/hooks/notifications/useUndoNotification';
+import { useStrings } from '@/hooks/configuration/useStrings';
 
 const UndoNotification = ({ 
   show, 
@@ -10,48 +11,17 @@ const UndoNotification = ({
   onClose, 
   duration = 5000 
 }) => {
-  const [isVisible, setIsVisible] = useState(false);
+  const { strings } = useStrings();
+  const { isVisible, handleClose } = useUndoNotification({ show, duration });
 
-  useEffect(() => {
-    if (show) {
-      setIsVisible(true);
-      // Auto-hide after duration
-      const timer = setTimeout(() => {
-        handleClose();
-      }, duration);
-      
-      return () => clearTimeout(timer);
-    }
-  }, [show, duration]);
-
-  useEffect(() => {
-    if (isVisible) {
-      // Animate in from bottom
-      gsap.fromTo('.undo-notification', 
-        { y: 100, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.3, ease: 'power2.out' }
-      );
-    }
-  }, [isVisible]);
-
-  const handleClose = () => {
-    // Animate out to bottom
-    gsap.to('.undo-notification', {
-      y: 100,
-      opacity: 0,
-      duration: 0.2,
-      ease: 'power2.in',
-      onComplete: () => {
-        setIsVisible(false);
-        onClose();
-      }
-    });
-  };
-
-  const handleUndo = () => {
+  const handleUndo = useCallback(() => {
     onUndo();
-    handleClose();
-  };
+    handleClose(onClose);
+  }, [onUndo, onClose, handleClose]);
+
+  const handleNotificationClose = useCallback(() => {
+    handleClose(onClose);
+  }, [onClose, handleClose]);
 
   if (!isVisible) return null;
 
@@ -66,10 +36,10 @@ const UndoNotification = ({
             onClick={handleUndo}
             className="px-3 py-1 text-settings-sm font-medium text-settings-accent-primary dark:text-settings-dark-accent-primary hover:text-settings-accent-hover dark:hover:text-settings-dark-accent-hover transition-colors"
           >
-            Deshacer
+            {strings?.actions?.undo || 'Deshacer'}
           </button>
           <button
-            onClick={handleClose}
+            onClick={handleNotificationClose}
             className="px-3 py-1 text-settings-sm font-medium text-settings-text-secondary dark:text-settings-dark-text-secondary hover:text-settings-text-primary dark:hover:text-settings-dark-text-primary transition-colors"
           >
             ✕

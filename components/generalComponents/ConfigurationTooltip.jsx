@@ -2,6 +2,7 @@
 
 import React from 'react';
 import GeneralTooltip, { TooltipPosition } from './GeneralTooltip';
+import { useStrings } from '@/hooks/configuration/useStrings';
 
 const ConfigurationTooltip = ({
   children,
@@ -10,33 +11,16 @@ const ConfigurationTooltip = ({
   distance = 0,
   className = ''
 }) => {
-  // Mensajes divertidos específicos para configuración
-  const configurationFunMessages = [
-    "Preparando motores...",
-    "Engrasando engranajes...",
-    "Calibrando sistemas...",
-    "Ajustando tuercas...",
-    "Sincronizando relojes...",
-    "Puliendo detalles...",
-    "Conectando circuitos...",
-    "Activando protocolo...",
-    "Configurando ambiente...",
-    "Optimizando rendimiento...",
-    "Afinando tornillos...",
-    "Verificando conexiones...",
-    "Aplicando lubricante...",
-    "Revisando válvulas...",
-    "Iniciando secuencia..."
-  ];
+  const { strings } = useStrings();
+  const configurationTooltips = strings.ui_strings.configurationTooltips;
 
   return (
     <GeneralTooltip
-      content="Configuración"
+      content={configurationTooltips}
       position={position}
       distance={distance}
       className={className}
       isActive={isActive}
-      funMessages={configurationFunMessages}
     >
       {children}
     </GeneralTooltip>

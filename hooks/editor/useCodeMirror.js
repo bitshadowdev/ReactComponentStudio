@@ -11,8 +11,6 @@ import { useEditorStore } from '@/stores/editorStore';
 import { useConfigurationStore } from '@/stores/configurationStore';
 
 import {
-  createFontTheme,
-  getWrappingExtension,
   selectTheme,
   createBasicSetup,
   createCustomStyles,
@@ -24,106 +22,85 @@ import {
   keyboardConfig
 } from '@/utils/editor/config';
 
+import { handleKeyUp } from '@/utils/editor/keyboardHandlers';
+
 /**
  * Custom hook for managing CodeMirror editor state and behavior
  * @param {Object} params - Hook parameters
- * @param {string} params.code - Current code value
- * @param {Function} params.onEditorChange - Code change handler
  * @param {Function} params.setTriggerRender - Render trigger function
- * @param {boolean} params.isSettingsOpen - Settings panel state
- * @param {Function} params.setIsSettingsOpen - Settings panel toggle function
  * @returns {Object} Hook return values
  */
 export const useCodeMirror = ({
-  code,
-  onEditorChange,
-  setTriggerRender,
-  isSettingsOpen,
-  setIsSettingsOpen
+  setTriggerRender
 }) => {
   // Editor instance ref
   const editorRef = useRef(null);
   const setEditorInstance = useEditorStore(state => state.setEditorInstance);
 
-  // Create compartments for dynamic theming
-  const [fontThemeCompartment] = useState(() => new Compartment());
-  const [wrappingCompartment] = useState(() => new Compartment());
+  // Initialize state
+  const initState = () => {
+    const editorConfig = useConfigurationStore((state) => state.configuration.editor);
+    const {
+      theme,
+      themeMode,
+      fontFamily,
+      fontSize,
+      lineHeight,
+      letterSpacing,
+      showSpaces,
+      showTabs,
+      showNewlines
+    } = editorConfig;
 
-  // Get configuration from store
-  const editorConfig = useConfigurationStore((state) => state.configuration.editor);
-
-  // Extract configuration values
-  const {
-    theme,
-    themeMode,
-    fontFamily,
-    fontSize,
-    lineHeight,
-    letterSpacing,
-    lineWrapping,
-    showSpaces,
-    showTabs,
-    showNewlines
-  } = editorConfig;
-
-  // Create derived values
-  const customStyle = createCustomStyles({ fontSize, lineHeight, letterSpacing });
-  const selectedTheme = selectTheme(theme, themeMode);
-  const basicSetupConfig = createBasicSetup();
-  const extensions = createExtensions(
-    editorParams,
-    fontFamily,
-    lineWrapping,
-    fontThemeCompartment,
-    wrappingCompartment
-  );
-
-  // CSS class for showing invisibles
-  const invisiblesClass = (showSpaces || showTabs || showNewlines) ? 'cm-show-invisibles' : '';
-
-  // Keyboard event handler
-  const handleKeyUp = (event) => {
-    const { shortcuts } = keyboardConfig;
-    const renderShortcut = shortcuts.render;
-
-    if (event.altKey && event.key === renderShortcut.key) {
-      event.preventDefault();
-      setTriggerRender((render) => !render);
-    }
+    return {
+      customStyle: createCustomStyles({ fontSize, lineHeight, letterSpacing }),
+      selectedTheme: selectTheme(theme, themeMode),
+      basicSetupConfig: createBasicSetup(),
+      extensions: createExtensions(editorParams, fontFamily),
+      invisiblesClass: (showSpaces || showTabs || showNewlines) ? 'cm-show-invisibles' : '',
+      editorConfig
+    };
   };
 
-  // Effect: Update line wrapping dynamically when it changes
-  useEffect(() => {
-    if (wrappingCompartment) {
-      // Force re-evaluation of the wrapping extension
-      const newExtension = getWrappingExtension(lineWrapping);
-      // This will be handled by the compartment system automatically
-    }
-  }, [lineWrapping, wrappingCompartment]);
+  const {
+    customStyle,
+    selectedTheme,
+    basicSetupConfig,
+    extensions,
+    invisiblesClass,
+    editorConfig
+  } = initState();
+
+  // Create compartments for dynamic theming
+  const [fontThemeCompartment] = useState(() => new Compartment());
 
   // Effect: Update font family dynamically via CSS when it changes
   useEffect(() => {
     // Find all CodeMirror content elements and update their font family
     const contentElements = document.querySelectorAll('.cm-content');
     contentElements.forEach(element => {
-      element.style.fontFamily = fontFamily;
+      element.style.fontFamily = editorConfig.fontFamily;
     });
 
     if (process.env.NODE_ENV === 'development') {
-      console.debug('[FontUpdate] Applied font family:', fontFamily);
+      console.debug('[FontUpdate] Applied font family:', editorConfig.fontFamily);
     }
-  }, [fontFamily]);
+  }, [editorConfig.fontFamily]);
 
   // Effect: Set up editor instance and cleanup
   useEffect(() => {
-    // Set the editor instance when it's available
-    if (editorRef.current?.editor) {
-      setEditorInstance(editorRef.current.editor);
-    }
+    const editor = editorRef.current?.editor;
+    if (!editor) return;
+
+    // Set editor instance
+    setEditorInstance(editor);
 
     // Cleanup function
     return () => {
-      setEditorInstance(null);
+      // Only cleanup if editor still exists
+      if (editorRef.current?.editor === editor) {
+        setEditorInstance(null);
+      }
     };
   }, [setEditorInstance]);
 

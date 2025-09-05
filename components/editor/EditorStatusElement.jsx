@@ -2,12 +2,13 @@
 
 import React from 'react';
 import { FaCog } from 'react-icons/fa';
-import { getStrings } from '@/utils/strings';
+import { useStrings } from '@/hooks/configuration/useStrings';
 import ConfigurationTooltip from '@/components/generalComponents/ConfigurationTooltip';
 import { TooltipPosition } from '@/components/generalComponents/GeneralTooltip';
 
 const EditorStatusElement = ({ onClick, isSettingsOpen }) => {
-  const strings = getStrings('es').ui_strings.editor.statusBar;
+  const { strings } = useStrings();
+  const statusBarStrings = strings.ui_strings.editor.statusBar;
   
   return (
     <ConfigurationTooltip 
@@ -23,7 +24,7 @@ const EditorStatusElement = ({ onClick, isSettingsOpen }) => {
             : 'text-component-editor-button-inactive-text hover:text-component-editor-button-inactive-hover-text hover:bg-component-editor-button-inactive-hover-bg'
         }`}
         onClick={onClick}
-        aria-label={strings.configTooltip}
+        aria-label={statusBarStrings.configTooltip}
       >
         <FaCog size={16} className={isSettingsOpen ? 'animate-spin' : ''} />
       </button>

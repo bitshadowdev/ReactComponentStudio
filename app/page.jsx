@@ -7,7 +7,6 @@ import ComponentPreview from '@/components/renderer/ComponentPreview';
 import useEditor from '@/hooks/editor/useEditor';
 import { useHotkeys } from 'react-hotkeys-hook';
 import SettingsPanel from '@/components/settingsPanel/Settings';
-import NotificationContainer from '@/components/generalComponents/NotificationContainer';
 import { commandManager } from '@/utils/commands';
 import { useNotificationStore } from '@/stores/notificationStore';
 
@@ -22,12 +21,6 @@ export default function Home() {
     setTriggerRender((render) => !render);
   });
 
-  // Initialize notification system with CommandManager
-  useEffect(() => {
-    commandManager.setNotificationCallback((commandType, command) => {
-      addCommandNotification(commandType, command);
-    });
-  }, [addCommandNotification]);
 
   useEffect(() => {
     if (isSettingsOpen) {
@@ -71,7 +64,6 @@ export default function Home() {
         </div>
       </section>
       
-      <NotificationContainer />
     </main>
   );
 }

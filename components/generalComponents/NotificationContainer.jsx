@@ -19,7 +19,7 @@ const NotificationContainer = () => {
   };
 
   return (
-    <div className="fixed bottom-4 right-4 z-50 flex flex-col gap-2 pointer-events-none">
+    <div className="fixed bottom-4 left-4 z-[99999] flex flex-col gap-2 pointer-events-none" style={{zIndex: 2147483647}}>
       {notifications.map((notification) => (
         <div key={notification.id} className="pointer-events-auto">
           <NotificationToast

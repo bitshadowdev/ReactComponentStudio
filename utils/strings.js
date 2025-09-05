@@ -16,6 +16,27 @@ const strings_es = {
         configTooltip: "Configuración"
       }
     },
+    configurationTooltips: [
+      "Preparando motores...",
+      "Engrasando engranajes...",
+      "Calibrando sistemas...",
+      "Ajustando tuercas...",
+      "Sincronizando relojes...",
+      "Puliendo detalles...",
+      "Conectando circuitos...",
+      "Activando protocolo...",
+      "Configurando ambiente...",
+      "Optimizando rendimiento...",
+      "Afinando tornillos...",
+      "Verificando conexiones...",
+      "Aplicando lubricante...",
+      "Revisando válvulas...",
+      "Iniciando secuencia...",
+      "Cargando configuración...",
+      "Inicializando sistema...",
+      "Estableciendo conexión...",
+      "Sincronizando datos..."
+    ],
     settings: {
       panelTitle: "Configuración del Editor",
       footerMessage: "Presiona \"Escape\" para cerrar",
@@ -24,7 +45,8 @@ const strings_es = {
         font: "Tipografía",
         lineWrapping: "Envoltura de línea",
         specialChars: "Caracteres especiales",
-        behavior: "Comportamiento del editor"
+        behavior: "Comportamiento del editor",
+        visualEffects: "Efectos Visuales"
       },
       theme: {
         modeTitle: "Modo General",
@@ -65,10 +87,40 @@ const strings_es = {
         tabSize: "Tamaño de Tabulación",
         indentUnit: "Unidad de Indentación",
         reindentButton: "Aplicar nueva indentación"
+      },
+      visualEffects: {
+        mainTitle: 'Efectos Visuales',
+        enabledLabel: 'Habilitar efectos visuales',
+        enabledDescription: 'Activa o desactiva todos los efectos de animación',
+        
+        particlesTitle: 'Efectos de Partículas',
+        particlesEnabled: 'Habilitar partículas',
+        particlesEnabledDescription: 'Muestra efectos de partículas al hacer clic',
+        particleCount: 'Cantidad de partículas',
+        particleSize: 'Tamaño de partículas',
+        particleTheme: 'Tema de color',
+        particleSpread: 'Radio de dispersión',
+        particleDuration: 'Duración (ms)',
+        
+        drawerTitle: 'Animaciones de Cajón',
+        drawerEnabled: 'Habilitar animaciones',
+        drawerEnabledDescription: 'Anima la apertura/cierre de dropdowns',
+        drawerDuration: 'Duración (ms)',
+        drawerEasing: 'Tipo de animación',
+        
+        selectionTitle: 'Efectos de Selección',
+        selectionEnabled: 'Habilitar efectos',
+        selectionEnabledDescription: 'Resalta elementos seleccionados',
+        selectionDuration: 'Duración (ms)',
+        selectionGlow: 'Intensidad del brillo',
+        
+        accessibilityTitle: 'Accesibilidad',
+        reducedMotion: 'Movimiento reducido',
+        reducedMotionDescription: 'Reduce las animaciones para mayor accesibilidad'
       }
     }
   }
-}
+};
 
 export function getStrings(lang) {
   if (lang === 'es') {

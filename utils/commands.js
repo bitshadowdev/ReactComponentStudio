@@ -122,22 +122,35 @@ export class CommandManager {
 }
 
 import { useEditorStore } from '@/stores/editorStore';
+import { useConfigurationStore } from '@/stores/configurationStore';
 
 class ReindentCommand {
   constructor(tabSize, useTabs) {
+    const configStore = useConfigurationStore.getState();
     this.tabSize = tabSize;
     this.useTabs = useTabs;
     this.oldContent = '';
-    this.newContent = '';
+    this.oldConfig = {
+      tabSize: configStore.configuration.editor.tabSize,
+      indentWithTabs: configStore.configuration.editor.indentWithTabs
+    };
+    this.newConfig = {
+      tabSize,
+      indentWithTabs: useTabs
+    };
     this.description = 'Reindent code';
     this.timestamp = new Date();
   }
 
   reindent() {
     const { code, setCode } = useEditorStore.getState();
+    const configStore = useConfigurationStore.getState();
     this.oldContent = code;
 
     if (!this.oldContent.trim()) return false;
+
+    // Apply new configuration first
+    configStore.setEditorConfiguration(this.newConfig);
 
     const lines = this.oldContent.split('\n');
     const newLines = [];
@@ -251,7 +264,9 @@ class ReindentCommand {
   }
 
   undo() {
+    const configStore = useConfigurationStore.getState();
     useEditorStore.getState().setCode(this.oldContent);
+    configStore.setEditorConfiguration(this.oldConfig);
     return true;
   }
 

@@ -185,11 +185,10 @@ export const InteractiveElement = (props) => {
 };
 
 // Exportar todos los wrappers individuales para uso directo
-export {
-  AnimationWrapper,
-  DrawerWrapper,
-  ParticleWrapper,
-  SelectionWrapper,
-  DragEffectWrapper,
-  useVisualEffects
-};
+export { default as AnimationWrapper } from './AnimationWrapper';
+export { default as DragEffectWrapper } from './DragEffectWrapper';
+export { default as DrawerWrapper } from './DrawerWrapper';
+export { default as ParticleWrapper } from './ParticleWrapper';
+export { default as SelectionWrapper } from './SelectionWrapper';
+export { default as ToastWrapper } from './ToastWrapper';
+export { useVisualEffects };

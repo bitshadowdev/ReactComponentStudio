@@ -1,4 +1,6 @@
 import Header from "@/components/header/Header";
+import NotificationContainer from '@/components/generalComponents/NotificationContainer';
+import ClientLayout from './ClientLayout';
 import "./globals.css";
 
 export const metadata = {
@@ -18,8 +20,11 @@ export default function RootLayout({ children }) {
         />
       </head>
       <body>
-        <Header />
-        {children}
+        <ClientLayout>
+          <Header />
+          {children}
+          <NotificationContainer />
+        </ClientLayout>
       </body>
     </html>
   );

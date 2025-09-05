@@ -3,6 +3,7 @@ import { persist } from 'zustand/middleware'
 
 const defaultConfiguration = {
   configuration: {
+    language: 'es', // Configuración global de idioma
     editor: {
       themeMode: 'dark', 
       theme: 'dracula', 
@@ -115,12 +116,20 @@ export const useConfigurationStore = create(
           }
         })),
       
+      setLanguage: (newLanguage) =>
+        set(state => ({
+          configuration: {
+            ...state.configuration,
+            language: newLanguage
+          }
+        })),
+      
       resetToDefault: () => set(defaultConfiguration)
     }),
     {
       name: 'editor-configuration',
       partialize: (state) => {
-        const { setEditorConfiguration, resetToDefault, ...persistedState } = state
+        const { setEditorConfiguration, resetToDefault, setLanguage, ...persistedState } = state
         return persistedState
       }
     }

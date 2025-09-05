@@ -1,11 +1,12 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState } from 'react';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { useTabScroll } from '@/hooks/tabs/useTabScroll';
 
 /**
  * Componente Tab individual
- * Patrón: Compound Component + Strategy Pattern
+ * Patrón: Compound Component + Single Responsibility Principle
  */
 const Tab = ({ 
   id, 
@@ -39,9 +40,13 @@ const TabsContainer = ({
   children
 }) => {
   const [internalActiveTab, setInternalActiveTab] = useState(defaultTab || tabs[0]?.id);
-  const [canScrollLeft, setCanScrollLeft] = useState(false);
-  const [canScrollRight, setCanScrollRight] = useState(false);
-  const scrollContainerRef = useRef(null);
+  const { 
+    scrollContainerRef,
+    canScrollLeft,
+    canScrollRight,
+    scrollLeft,
+    scrollRight
+  } = useTabScroll();
   
   // Determina si el componente es controlado o no controlado
   const isControlled = controlledActiveTab !== undefined;
@@ -53,52 +58,6 @@ const TabsContainer = ({
     }
     onTabChange?.(tabId);
   };
-
-  // Verificar si se puede hacer scroll
-  const checkScrollability = () => {
-    if (scrollContainerRef.current) {
-      const container = scrollContainerRef.current;
-      setCanScrollLeft(container.scrollLeft > 0);
-      setCanScrollRight(
-        container.scrollLeft < container.scrollWidth - container.clientWidth
-      );
-    }
-  };
-
-  // Scroll hacia la izquierda
-  const scrollLeft = () => {
-    if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollBy({
-        left: -120,
-        behavior: 'smooth'
-      });
-    }
-  };
-
-  // Scroll hacia la derecha
-  const scrollRight = () => {
-    if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollBy({
-        left: 120,
-        behavior: 'smooth'
-      });
-    }
-  };
-
-  useEffect(() => {
-    checkScrollability();
-    const container = scrollContainerRef.current;
-    
-    if (container) {
-      container.addEventListener('scroll', checkScrollability);
-      window.addEventListener('resize', checkScrollability);
-      
-      return () => {
-        container.removeEventListener('scroll', checkScrollability);
-        window.removeEventListener('resize', checkScrollability);
-      };
-    }
-  }, [tabs]);
 
   return (
     <div className={`relative flex items-center border-b border-settings-surface-border dark:border-settings-dark-surface-border bg-settings-bg-primary dark:bg-settings-dark-bg-primary ${className}`}>

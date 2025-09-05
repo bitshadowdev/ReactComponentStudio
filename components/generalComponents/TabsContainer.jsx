@@ -91,7 +91,7 @@ const TabsContainer = ({
       </div>
       
       {/* Botón scroll derecha */}
-      {canScrollRight && (
+      {canScrollRight && tabs.length > 4 && (
         <button
           onClick={scrollRight}
           className="absolute right-0 top-0 z-10 h-full w-8 bg-gradient-to-l from-settings-bg-primary dark:from-settings-dark-bg-primary to-transparent flex items-center justify-end pr-1 hover:from-settings-surface-hover dark:hover:from-settings-dark-surface-hover transition-all duration-200"

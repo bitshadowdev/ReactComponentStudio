@@ -14,6 +14,7 @@ export default function Home() {
   const { code, onEditorChange, triggerRender, setTriggerRender } = useEditor();
   const componentPreviewRef = useRef(null);
   const editorRef = useRef(null);
+  const settingsPanelRef = useRef(null);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const { addCommandNotification } = useNotificationStore();
 
@@ -24,12 +25,14 @@ export default function Home() {
 
   useEffect(() => {
     if (isSettingsOpen) {
+      gsap.to(settingsPanelRef.current, { x: '0%', duration: 0.5, ease: 'power2.out' });
       gsap.to([editorRef.current, componentPreviewRef.current], {
         x: 384, // Match the w-96 width (96 * 4px = 384px)
         duration: 0.5,
         ease: 'power2.out'
       });
     } else {
+      gsap.to(settingsPanelRef.current, { x: '-100%', duration: 0.3, ease: 'power2.in' });
       gsap.to([editorRef.current, componentPreviewRef.current], {
         x: 0,
         duration: 0.3,
@@ -40,8 +43,8 @@ export default function Home() {
 
   return (
     <main className="flex h-screen overflow-hidden">
-      <div className="fixed left-0 w-96 h-full z-10">
-        {isSettingsOpen && <SettingsPanel isOpen={isSettingsOpen} onClose={() => setIsSettingsOpen(false)} />}
+      <div ref={settingsPanelRef} className="fixed left-0 w-96 h-full z-10" style={{ transform: 'translateX(-100%)' }}>
+        <SettingsPanel isOpen={isSettingsOpen} onClose={() => setIsSettingsOpen(false)} />
       </div>
       
       <section 
@@ -64,6 +67,8 @@ export default function Home() {
         </div>
       </section>
       
+      {/* Portal container for tooltips - highest z-index */}
+      <div id="tooltip-portal" className="fixed inset-0 pointer-events-none" style={{ zIndex: 999999999 }} />
     </main>
   );
 }

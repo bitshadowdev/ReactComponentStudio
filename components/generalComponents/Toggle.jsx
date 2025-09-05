@@ -29,9 +29,9 @@ const Toggle = ({
   return (
     <div className={`flex items-center justify-between ${className}`}>
       <div>
-        {label && <h3 className="text-black font-semibold text-sm">{label}</h3>}
+        {label && <h3 className="text-settings-text-primary font-semibold text-sm">{label}</h3>}
         {description && (
-          <p className="text-gray-600 text-xs mt-1">{description}</p>
+          <p className="text-settings-text-secondary text-xs mt-1">{description}</p>
         )}
       </div>
 
@@ -42,14 +42,14 @@ const Toggle = ({
         onClick={handleClick}
       >
         <div className={`
-          w-10 h-5 rounded-full transition-colors duration-200
-          ${checked ? 'bg-black' : 'bg-gray-300'}
+          w-12 h-6 rounded-full transition-colors duration-200 border-2 border-black
+          ${checked ? 'bg-black' : 'bg-white'}
           ${disabled ? 'opacity-50 cursor-not-allowed' : ''}
         `}>
           <div className={`
-            absolute top-1 left-1 w-3 h-3 bg-white rounded-full
-            transition-transform duration-200 border border-gray-400
-            ${checked ? 'translate-x-5' : 'translate-x-0'}
+            absolute top-1/2 left-1 w-4 h-4 rounded-full -translate-y-1/2
+            transition-transform duration-200 border border-black
+            ${checked ? 'translate-x-5 bg-white' : 'translate-x-0 bg-black'}
           `}></div>
         </div>
       </InteractiveElement>

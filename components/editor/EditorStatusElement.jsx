@@ -15,10 +15,10 @@ const EditorStatusElement = ({ onClick, isSettingsOpen }) => {
       isActive={isSettingsOpen}
       position={TooltipPosition.BOTTOM}
       distance={20}
-      className="flex items-center justify-center h-full px-3"
+      className="flex items-center justify-center h-full"
     >
       <button
-        className={`transition-colors ${
+        className={`transition-colors p-2 rounded ${
           isSettingsOpen 
             ? 'text-component-editor-button-active-text bg-component-editor-button-active-bg hover:text-component-editor-button-active-hover-text hover:bg-component-editor-button-active-hover-bg' 
             : 'text-component-editor-button-inactive-text hover:text-component-editor-button-inactive-hover-text hover:bg-component-editor-button-inactive-hover-bg'

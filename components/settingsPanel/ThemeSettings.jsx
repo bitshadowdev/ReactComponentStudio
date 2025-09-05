@@ -84,7 +84,8 @@ const FontDropdown = ({ label, value, options, onChange, onHover, onHoverEnd, cl
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const selectedOption = options.find(opt => opt.family === value);
+  const normalize = (str) => (str || '').replace(/['"\s,-]/g, '').toLowerCase();
+  const selectedOption = options.find(opt => normalize(opt.family) === normalize(value));
 
   return (
     <div className={`relative ${className}`} ref={dropdownRef}>
@@ -95,7 +96,7 @@ const FontDropdown = ({ label, value, options, onChange, onHover, onHoverEnd, cl
         onClick={() => setIsOpen(!isOpen)}
       >
         <span style={{ fontFamily: selectedOption ? selectedOption.family : 'monospace' }} className="font-medium">
-          {selectedOption ? selectedOption.name : 'Seleccionar fuente...'}
+          {selectedOption?.name || value || 'Seleccionar fuente...'}
         </span>
         <svg
           className={`w-4 h-4 transition-transform duration-300 text-gray-500 ${isOpen ? 'rotate-180' : ''}`}
@@ -109,8 +110,11 @@ const FontDropdown = ({ label, value, options, onChange, onHover, onHoverEnd, cl
 
       <AnimatedDropdown
         isOpen={isOpen}
-        onOptionSelect={(fontFamily) => {
-          onChange(fontFamily);
+        onOptionSelect={(fontName) => {
+          const selectedFont = options.find(opt => opt.name === fontName);
+          if (selectedFont) {
+            onChange(selectedFont.family);
+          }
           setIsOpen(false);
         }}
         particleTheme="accent"
@@ -213,8 +217,8 @@ const ThemeSettings = () => {
   const filteredThemes = themes.filter(t => t.mode === editorConfig.themeMode);
   
   return (
-    <div className="flex flex-col h-full">
-      <div className="space-y-6 flex-1">
+    <div className="h-full flex flex-col">
+      <div className="space-y-6">
         <SettingsCard>
           <h3 className="text-base font-semibold text-gray-900 mb-4">{strings.modeTitle}</h3>
           <div className="flex space-x-3">
@@ -275,7 +279,10 @@ const ThemeSettings = () => {
             value={editorConfig.fontFamily}
             options={fontFamilies}
             onChange={(fontFamily) => {
-              setEditorConfiguration({ fontFamily: fontFamily });
+              const selectedFont = fontFamilies.find(f => f.family === fontFamily);
+              if (selectedFont) {
+                setEditorConfiguration({ fontFamily: selectedFont.family });
+              }
               setPreviewFont(null);
             }}
             onHover={handleFontHover}

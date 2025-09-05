@@ -18,7 +18,10 @@ const SelectionWrapper = ({
   const elementRef = useRef(null);
 
   useEffect(() => {
-    if (isSelected && elementRef.current) {
+    const element = elementRef.current;
+    if (!element) return;
+
+    if (isSelected) {
       const element = elementRef.current;
 
       if (!animationsEnabled) {
@@ -132,6 +135,25 @@ const SelectionWrapper = ({
       tl.call(() => {
         gsap.set(element, { clearProps: 'willChange' });
       });
+    } else {
+      // Reset all styles when not selected
+      gsap.set(element, {
+        clearProps: 'all',
+        backgroundColor: 'transparent',
+        borderLeftWidth: '0px',
+        borderLeftColor: 'transparent',
+        boxShadow: 'none',
+        scale: 1
+      });
+      
+      const textElement = element.querySelector('.selection-text');
+      if (textElement) {
+        gsap.set(textElement, {
+          clearProps: 'all',
+          color: 'currentColor',
+          textShadow: 'none'
+        });
+      }
     }
   }, [isSelected, duration, color, onSelectionComplete, animationsEnabled, glowIntensity]);
 

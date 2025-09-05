@@ -4,13 +4,12 @@ import React from 'react';
 
 const StatusBar = ({ children }) => {
   return (
-    <div className="h-8 flex items-center justify-between border-b border-gray-200 bg-gray-50 text-xs text-gray-600 drop-shadow-sm">
-      <div className="flex items-center h-full px-3 font-medium text-gray-800">
-        Editor
-      </div>
-      
-      <div className="flex items-center h-full">
+    <div className="h-8 flex items-center border-b border-settings-surface-border bg-settings-surface-secondary text-settings-sm text-settings-text-secondary drop-shadow-sm">
+      <div className="flex items-center h-full px-3">
         {children}
+        <span className="font-medium text-settings-text-primary ml-2">
+          Editor
+        </span>
       </div>
     </div>
   );

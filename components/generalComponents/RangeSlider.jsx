@@ -51,7 +51,7 @@ const RangeSlider = ({
       >
         {label && (
           <label 
-            className="block text-sm font-semibold text-black mb-3"
+            className="block text-sm font-semibold text-settings-text-primary mb-3"
           >
             {label}: <span className="font-bold">
               {value}{unit}
@@ -63,7 +63,7 @@ const RangeSlider = ({
           {/* Track */}
           <div 
             ref={trackRef}
-            className="h-1 w-full bg-gray-300 rounded-full overflow-hidden cursor-pointer"
+            className="h-1 w-full bg-white border border-black rounded-full overflow-hidden cursor-pointer"
             onClick={handleTrackClick}
           >
             {/* Filled track */}
@@ -94,7 +94,7 @@ const RangeSlider = ({
         
         {/* Min/Max labels */}
         {showLabels && (
-          <div className="flex justify-between text-xs text-gray-600 mt-1">
+          <div className="flex justify-between text-settings-sm text-settings-text-secondary mt-1">
             <span className="font-medium">{min}{unit}</span>
             <span className="font-medium">{max}{unit}</span>
           </div>

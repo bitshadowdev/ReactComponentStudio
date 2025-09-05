@@ -120,6 +120,13 @@ module.exports = {
           }
         },
 
+        // Tooltip colors
+        tooltip: {
+          bg: '#1f2937',
+          text: '#ffffff',
+          border: '#374151'
+        },
+
         // Component States
         component: {
           // Editor Status Button States

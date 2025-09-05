@@ -11,16 +11,20 @@ const ConfigurationTooltip = ({
   distance = 0,
   className = ''
 }) => {
-  const { strings } = useStrings();
-  const configurationTooltips = strings.ui_strings.configurationTooltips;
+  const { strings: { ui_strings } } = useStrings();
+  const configurationTooltips = ui_strings.configurationTooltips;
+  const configMessage = ui_strings.editor.statusBar.configTooltip;
+
+  const message = isActive
+    ? configurationTooltips[Math.floor(Math.random() * configurationTooltips.length)]
+    : configMessage;
 
   return (
     <GeneralTooltip
-      content={configurationTooltips}
+      message={message}
       position={position}
       distance={distance}
       className={className}
-      isActive={isActive}
     >
       {children}
     </GeneralTooltip>

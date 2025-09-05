@@ -12,8 +12,8 @@ const EditorDisplaySettings = () => {
   const strings = getStrings('es').ui_strings.settings.editorBehavior;
   
   return (
-    <div className="flex flex-col h-full">
-      <div className="space-y-4 flex-1">
+    <div className="h-full flex flex-col">
+      <div className="space-y-4">
         <SettingsCard>
           <Toggle
             checked={editorConfig.lineNumbers}

@@ -52,11 +52,13 @@ export const useCodeMirror = ({
       showNewlines
     } = editorConfig;
 
+    const [fontThemeCompartment] = useState(() => new Compartment());
+
     return {
       customStyle: createCustomStyles({ fontSize, lineHeight, letterSpacing }),
       selectedTheme: selectTheme(theme, themeMode),
       basicSetupConfig: createBasicSetup(),
-      extensions: createExtensions(editorParams, fontFamily),
+      extensions: createExtensions(editorParams, fontFamily, null, fontThemeCompartment, null),
       invisiblesClass: (showSpaces || showTabs || showNewlines) ? 'cm-show-invisibles' : '',
       editorConfig
     };
@@ -72,7 +74,6 @@ export const useCodeMirror = ({
   } = initState();
 
   // Create compartments for dynamic theming
-  const [fontThemeCompartment] = useState(() => new Compartment());
 
   // Effect: Update font family dynamically via CSS when it changes
   useEffect(() => {

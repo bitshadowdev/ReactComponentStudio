@@ -3,15 +3,33 @@
 // Sistema de composición de wrappers de animación
 import React from 'react';
 import { useConfigurationStore } from '@/stores/configurationStore';
-import AnimationWrapper from './AnimationWrapper';
 import DrawerWrapper from './DrawerWrapper';
 import ParticleWrapper from './ParticleWrapper';
 import SelectionWrapper from './SelectionWrapper';
-import DragEffectWrapper from './DragEffectWrapper'; // Nuevo import
-
 // Hook para obtener configuración de efectos visuales
 const useVisualEffects = () => {
-  return useConfigurationStore((state) => state.configuration.visualEffects);
+  return useConfigurationStore((state) => state.configuration?.visualEffects) || {
+    enabled: true,
+    particleEffects: {
+      enabled: true,
+      count: 12,
+      size: 4,
+      theme: 'light',
+      spreadRadius: 40,
+      duration: 600
+    },
+    drawerAnimations: {
+      enabled: true,
+      duration: 350,
+      easing: 'power3.out'
+    },
+    selectionEffects: {
+      enabled: true,
+      duration: 400,
+      glowIntensity: 0.8
+    },
+    reducedMotion: false
+  };
 };
 
 // Función de composición que permite combinar wrappers
@@ -34,6 +52,12 @@ export const AnimatedDropdown = ({
   ...props
 }) => {
   const [selectedOption, setSelectedOption] = React.useState(null);
+
+  React.useEffect(() => {
+    if (!isOpen) {
+      setSelectedOption(null);
+    }
+  }, [isOpen]);
   const visualEffects = useVisualEffects();
 
   // Calcular si las animaciones están habilitadas
@@ -120,10 +144,15 @@ export const InteractiveElement = (props) => {
     onClick && onClick(event);
   };
 
-  // Filter out non-DOM props before spreading to div
+  // Filter out all non-DOM props before spreading to div
   const { 
     children: _children,
     onClick: _onClick,
+    particleTheme: _particleTheme,
+    particleColor: _particleColor,
+    selectionColor: _selectionColor,
+    enableParticles: _enableParticles,
+    enableSelection: _enableSelection,
     ...domProps 
   } = restProps;
 

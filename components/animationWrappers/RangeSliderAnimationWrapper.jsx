@@ -16,20 +16,32 @@ export const RangeSliderAnimationWrapper = ({
   useEffect(() => {
     const percentage = ((value - min) / (max - min)) * 100;
 
-    if (!isDragging) {
-      gsap.to(thumbRef.current, {
-        left: `${percentage}%`,
-        duration: 0.4,
+    // Always update thumb position immediately when dragging, with animation when not
+    if (thumbRef.current) {
+      if (isDragging) {
+        // Set position immediately during drag without animation
+        gsap.set(thumbRef.current, {
+          left: `${percentage}%`,
+        });
+      } else {
+        // Smooth animation when not dragging
+        gsap.to(thumbRef.current, {
+          left: `${percentage}%`,
+          duration: 0.3,
+          ease: 'power2.out',
+        });
+      }
+    }
+
+    // Always animate the filled track
+    if (filledTrackRef.current) {
+      gsap.to(filledTrackRef.current, {
+        width: `${percentage}%`,
+        duration: isDragging ? 0.1 : 0.3,
         ease: 'power2.out',
       });
     }
-
-    gsap.to(filledTrackRef.current, {
-      width: `${percentage}%`,
-      duration: isDragging ? 0.6 : 0.4,
-      ease: 'power2.out',
-    });
-  }, [value, min, max, isDragging]);
+  }, [value, min, max, isDragging, thumbRef, filledTrackRef]);
 
   return children;
 };

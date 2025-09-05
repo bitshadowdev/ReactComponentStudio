@@ -149,7 +149,7 @@ export const createExtensions = (params, fontFamily, lineWrapping, fontThemeComp
 
   return [
     javascript,
-    fontThemeCompartment.of(createFontTheme(fontFamily)),
-    wrappingCompartment.of(getWrappingExtension(lineWrapping))
-  ];
+    fontThemeCompartment?.of(createFontTheme(fontFamily)),
+    wrappingCompartment?.of(getWrappingExtension(lineWrapping))
+  ].filter(Boolean);
 };

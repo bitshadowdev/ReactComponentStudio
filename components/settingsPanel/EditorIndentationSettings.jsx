@@ -15,8 +15,8 @@ const EditorIndentationSettings = () => {
   } = useIndentationSettings();
 
   return (
-    <div className="flex flex-col h-full">
-      <div className="space-y-6 flex-1">
+    <div className="h-full flex flex-col">
+      <div className="space-y-6">
         <RangeSlider
           value={tabSize}
           onChange={setTabSize}
